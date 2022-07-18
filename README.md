@@ -66,12 +66,12 @@ php artisan serve
 Segundo a documentação do Laravel:
 >As migrações são como controle de versão para seu banco de dados, permitindo que sua equipe defina e compartilhe a definição do esquema de banco de dados do aplicativo. Se você já teve que dizer a um colega de equipe para adicionar manualmente uma coluna ao esquema de banco de dados local depois de obter suas alterações do controle de origem, você enfrentou o problema que as migrações de banco de dados resolvem.
 
-Para dar start na criação do banco precisamos primeiramente fazer as configurações nescessárias.
+Para dar start na criação do banco precisamos primeiramente fazer as configurações nescessárias no porjeto do Laravel.
 
 - Ter um SGBD
 - Saber sua credencial de acesso ao banco como nome_usuario e senha
 
-Com o Workbench crio a minha base dados para guardar minha informações que viram do APP.
+Com o Workbench crio a minha base dados para guardar minhas informações que vierem do APP.
 
 ```sql
 CREATE DATABASE myBank;
@@ -79,7 +79,7 @@ CREATE DATABASE myBank;
 Precisamos somente de ter o banco criado, os proximos passos como criação de tabelas será feito atraves do Laravel.
 
 **Arquivo .env**
-Por padrão no laravel já vem pré configurado para fazer nosso app se comunicar com o banco, apenas será nescessário passar nossa credêncial de acesso ao banco.
+Por padrão no Laravel já vem pré configurado para fazer nosso app se comunicar com o banco, apenas será nescessário passar nossa credêncial de acesso ao banco.
 
 ```laravel
 DB_CONNECTION=mysql
