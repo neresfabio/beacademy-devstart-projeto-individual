@@ -2,6 +2,7 @@
 
 O Laravel que é o framework PHP e open-souce criado por Taylor B. Otwell para desenvolvimento de sistemas Web. Totalmente FREE!
 
+## INÍCIO
 <details>
     <summary>
         Criar um CRUD em PHP, utilizando Laravel
@@ -9,7 +10,6 @@ O Laravel que é o framework PHP e open-souce criado por Taylor B. Otwell para d
 <hr>
 
 ## CRUD (Create, Read, Update, Delete) é um acrônimo para as maneiras de se operar em informação armazenada.
-
 Quando falamos de Darta Base, a primeria coisa que vem a mente é que iremos usar algum framework para criarmos nosso banco e suas tabelas, que iremos ter que fazer tudo a mão, digitando os primeiros comandos e ou tudo do gênero que envolve a manipulação do banco de dados.
 
 Para quem é inicante já pensa, "mas não sei nada sobre banco de dados, vou ter que estudar como fazer para depois voltar a usar o Laravel?".
@@ -39,6 +39,8 @@ php artisan serve
 
 </details>
 <br>
+
+## DATA BASE 
 <details>
     <summary>
         Utilizar o banco de dados Mysql para criar uma tabela - de sua preferência, com 10 atributos
@@ -66,12 +68,12 @@ php artisan serve
 Segundo a documentação do Laravel:
 >As migrações são como controle de versão para seu banco de dados, permitindo que sua equipe defina e compartilhe a definição do esquema de banco de dados do aplicativo. Se você já teve que dizer a um colega de equipe para adicionar manualmente uma coluna ao esquema de banco de dados local depois de obter suas alterações do controle de origem, você enfrentou o problema que as migrações de banco de dados resolvem.
 
-Para dar start na criação do banco precisamos primeiramente fazer as configurações nescessárias no porjeto do Laravel.
+Para dar start na criação do banco precisamos primeiramente fazer as configurações nescessárias.
 
 - Ter um SGBD
 - Saber sua credencial de acesso ao banco como nome_usuario e senha
 
-Com o Workbench crio a minha base dados para guardar minhas informações que vierem do APP.
+Com o Workbench crio a minha base dados para guardar minha informações que viram do APP.
 
 ```sql
 CREATE DATABASE myBank;
@@ -79,7 +81,7 @@ CREATE DATABASE myBank;
 Precisamos somente de ter o banco criado, os proximos passos como criação de tabelas será feito atraves do Laravel.
 
 **Arquivo .env**
-Por padrão no Laravel já vem pré configurado para fazer nosso app se comunicar com o banco, apenas será nescessário passar nossa credêncial de acesso ao banco.
+Por padrão no laravel já vem pré configurado para fazer nosso app se comunicar com o banco, apenas será nescessário passar nossa credêncial de acesso ao banco.
 
 ```laravel
 DB_CONNECTION=mysql
@@ -206,10 +208,70 @@ Esse pequeno codigo ou função, armazena em uma variavel **$users** o retorno d
 
 ![Resultado na tela.](/image/resultado_01.png)
 
+## Criando as colunas que faltam da minha [tabela](#tabela) que mostrei no início.
+
+<hr>
+
+**Comandos**
+
+Para criar uma nova coluna na base de dados precisamos criar uma migration:
+
+```bash
+php artisan make:migration add_new_collum
+```
+
+Configurando a migration criada:
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->string('phone')->nullable()->after('name');
+            $table->string('cpf')->nullable()->after('email');
+            $table->string('age')->nullable()->after('email');
+            $table->string('rg')->nullable()->after('email');
+            $table->string('sex')->nullable();
+            $table->string('civil_status')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('profession')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('users',function(Blueprint $table){
+            $table->dropColumn('phone','cpf','age','rg','sex','civil_status','postal_code','profession');
+        });
+    }
+};
+
+```
+
+Caso queira reverter a criação da coluna:
+
+```bash
+php artisan migrate:rollback
+```
 Agora que os dados estão chegando na Controller, podemos criar um layout para aprensentar melhor esses dados.
-
-
-
+[Estilizando o Front End](#front-end)
 
 
 </details>
@@ -227,10 +289,151 @@ Agora que os dados estão chegando na Controller, podemos criar um layout para a
     </summary>
 </details>
 <br>
+
+## FRONT END
 <details>
     <summary>
         As ações deverão ser realizadas através de uma página web, portanto o sistema deverá conter um frontend que se comunique com o backend
     </summary>
+<br>
+
+## Criando interface para que possamos visualizar os dados em uma pagina web.
+<hr>
+Para listar os usuario na pagina web, nessa primeira fase, fiz uma interface simples para visualizar os dados que estão vindo do banco de dados.
+
+**Bootstrap**
+
+Aqui utilizei o bootstrap para estilizar a minha pagina. Tambem ja adicionei um botão para começar a pensar em como trabalhar essas informações.
+
+## Layout Lista Usuarios
+
+![Layout de Lista de usuarios](/image/interface_list_users.png)
+
+No Laravel, no arquivo web.php tenho a seguinte rota: 
+
+```php
+ Route::get('/users',[UserController::class,'index'])->name('users.index');
+```
+Utilizarei a rota acima para acessar a pagina onde mostrarei a lista dos meu usuarios criados. Para isso na minha controller UserController na função index que criei para chamar a pagina index.blade.php, irei passar o seguinte comando  para mostrar os dados dos usuarios da minha tabela do banco de dados.
+
+**Listando todos os usuarios cadastrado**
+
+```php
+public function index()
+    {
+        $users = User::all();
+
+        dd($users);
+    }
+```
+
+O codigo acima tras todos os usuarios da minha tabela e armazena essa lista em uma vareavel e o dd() se encarrega de mostrar essa lista na minha pagina, uso isso apenas para saber se os dados estão chegando.
+
+Agora irei organizar essas informações usando o Bootstrap, na pasta View, crio a view "index.blade.php" para criar o layout da pagina.
+
+**resources/views/users/index.blade.php**
+
+O diretorio onde armazenamos as interfaces que criamos se chama **Resources**
+
+Criei uma pasta users para organizar minhas views de usuarios, criei a view da listagem de usuarios com o nome de "index". Na mesma criei e estruturei uma tabela usando o Bootstrap e PHP para criar a tabela onde estará listados os dados.
+
+```html
+<table class="table">
+  <caption>Lista de Usuários</caption>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">NOME</th>
+      <th scope="col">EMAIL</th>
+      <th scope="col">DATA CADASTRO</th>
+      <th scope="col">AÇÕES</th>
+    </tr>
+  </thead>
+  <tbody>
+      @foreach ($users as $user)
+          <tr>
+              <th scope="row">{{$user->id}}</th>
+              <td>{{$user->name}}</td>
+              <td>{{$user->email}}</td>
+              <td>{{date('d/m/Y - H:i',strtotime($user->created_at))}}</td>
+              <td><a href="{{route('users.show',$user->id)}}" class="btn btn-info text-white">VER</a></td>
+          </tr>
+      @endforeach
+  </tbody>
+</table>
+```
+[Imagem do layout com os dados](#layout-lista-usuarios)
+
+**Listando um Usuario**
+
+Como criei uma tabela onde tem um botão para ver os dados do usuario em especifico agora crio uma função para que quando clicar no botão os dados do usuario selecionado seja mostrado.
+
+Voltando na controller UserController crio a seguinte função chamada de show, ela tem uma validação que se um usuario for selecionado ela retorna a pagina para mostrar os dados de um usuario "show.blade.php", no caso ele não encontre o usuario ela retorna "index.blade.php":
+
+```php
+    public function show($id)
+    {
+        //$user = User::find($id);
+        if(!$user = User::where('id',$id)->first())
+            return redirect()->route('users.index');
+
+        $title = 'Usuario '.$user->name;
+
+        return view('users.show', compact('user','title'));
+    }
+```
+Agora preciso ter minha view para mostar o usuario, **resources/views/users/show.blade.php**, com a view show criada:
+
+```html
+<table class="table">
+    <caption>Usuário: {{$user->name}}</caption>
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">NOME</th>
+        <th scope="col">EMAIL</th>
+        <th scope="col">DATA CADASTRO</th>
+        <th scope="col">AÇÕES</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th scope="row">{{$user->id}}</th>
+            <td>{{$user->name}}</td>
+            <td>{{$user->email}}</td>
+            <td>{{date('d/m/Y - H:i',strtotime($user->created_at))}}</td>
+            <td class="btn-group" role="group">
+                <a href="#" class="btn btn-warning text-white">EDITAR</a>
+                <a href="#" class="btn btn-danger text-white">DELETAR</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+```
+![Imagem do layout usuario](/image/interface_usuario.png)
+
+## Blade
+
+Segundo a Doc Laravel:
+
+>Blade é o mecanismo de modelagem simples, mas poderoso, incluído no Laravel. Ao contrário de alguns mecanismos de modelagem PHP, o Blade não restringe o uso de código PHP simples em seus modelos. Na verdade, todos os modelos do Blade são compilados em código PHP simples e armazenados em cache até serem modificados, o que significa que o Blade adiciona essencialmente zero sobrecarga ao seu aplicativo. Os arquivos de modelo blade usam a .blade.phpextensão de arquivo e geralmente são armazenados no resources/viewsdiretório.
+
+Deixando mais dinâmico os layout.
+
+**resources/views/template/users.blade.php**
+
+Apenas organizamos as partes do Html para que seja chamado em qualquer arquivo, isso facilita e diminuir o numero de linhas de codigos das views, deixando mais limpo e dinamico o projeto.
+
+![Imagem do template dinâmico](/image/blade.png)
+
+Usando os comandos do Blade consigo manipular a forma que minhas telas se comportam. Na imagem anterio
+é usado um comando ```@yeld('nome_do_comando')``` entre os parentes dou um nome para o comando.
+
+Agora como fica nas outras views.
+
+![Imagem importando a o template criado](/image/import_template.png)
+
+
 </details>
 <br>
 <details>
