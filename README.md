@@ -208,7 +208,7 @@ Esse pequeno codigo ou função, armazena em uma variavel **$users** o retorno d
 
 ![Resultado na tela.](/image/resultado_01.png)
 
-## Criando as colunas que faltam da minha [tabela](#tabela) que mostrei no início.
+## Criando as colunas que faltam da [tabela](#tabela) que mostrei no início.
 
 <hr>
 
@@ -217,10 +217,10 @@ Esse pequeno codigo ou função, armazena em uma variavel **$users** o retorno d
 Para criar uma nova coluna na base de dados precisamos criar uma migration:
 
 ```bash
-php artisan make:migration add_new_collum
+php artisan make:migration add_colluns_to_users_table
 ```
 
-Configurando a migration criada:
+Migration criada:
 
 ```php
 <?php
@@ -239,14 +239,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->string('phone')->nullable()->after('name');
-            $table->string('cpf')->nullable()->after('email');
-            $table->string('age')->nullable()->after('email');
-            $table->string('rg')->nullable()->after('email');
-            $table->string('sex')->nullable();
-            $table->string('civil_status')->nullable();
-            $table->string('postal_code')->nullable();
-            $table->string('profession')->nullable();
+            //
         });
     }
 
@@ -258,31 +251,93 @@ return new class extends Migration
     public function down()
     {
         Schema::drop('users',function(Blueprint $table){
-            $table->dropColumn('phone','cpf','age','rg','sex','civil_status','postal_code','profession');
+            //
         });
     }
 };
 
 ```
+Configurando a migration criada:
 
-Caso queira reverter a criação da coluna:
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('phone')->nullable()->after('email');
+            $table->string('cpf')->nullable()->after('email');
+            $table->string('age')->nullable()->after('email');
+            $table->string('rg')->nullable()->after('email');
+            $table->string('sex')->nullable()->after('email_verified_at');
+            $table->string('status_civil')->nullable()->after('email_verified_at');
+            $table->string('postal_code')->nullable()->after('email_verified_at');
+            $table->string('profession')->nullable()->after('email_verified_at');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('phone');
+            $table->dropColumn('cpf');
+            $table->dropColumn('age');
+            $table->dropColumn('rg');
+            $table->dropColumn('sex');
+            $table->dropColumn('status_civil');
+            $table->dropColumn('postal_code');
+            $table->dropColumn('profession');
+        });
+    }
+};
+```
+Assim as novas colunas serão criadas na base de dados, caso algo de errado na criação, basta parar a aplicação caso esteja rodado no servidor, e rodar o comando para limpar o cache:
+
+```bash
+php artisan optimize
+```
+
+Caso queira reverter a criação das colunas:
 
 ```bash
 php artisan migrate:rollback
 ```
+
 Agora que os dados estão chegando na Controller, podemos criar um layout para aprensentar melhor esses dados.
 [Estilizando o Front End](#front-end)
 
 
 </details>
+<hr>
 <br>
+
+## AUTENTICAÇÃO
 <details>
     <summary>
         O sistema deverá possuir autenticação
     </summary>
 
 </details>
+<hr>
 <br>
+
+# CRUD
 <details>
     <summary>
         O CRUD deve conter os métodos de Insert, Update, Delete e Read dessa tabela
@@ -435,16 +490,13 @@ Agora como fica nas outras views.
 
 
 </details>
+<hr>
 <br>
+
+## TESTING
 <details>
     <summary>
         A solução deve ter pelo menos 30% de testes unitários 
-    </summary>
-</details>
-<br>
-<details>
-    <summary>
-        O projeto deverá ser armazenado no repositório do github
     </summary>
 </details>
 <br>
