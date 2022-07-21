@@ -418,6 +418,10 @@ Nessa sessão me deparei com o sequinte problema, na criação do projeto usei a
 
 ## COMO PRECISO CONCLUIR O CRUD CRIEI OUTRO PROJETO
 
+**Nova DB criada**
+
+![Nova Base de dados](/image/db_new.png)
+
 </details>
 <hr>
 <br>
