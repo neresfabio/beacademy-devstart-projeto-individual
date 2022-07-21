@@ -38,6 +38,7 @@ php artisan serve
 ![Tela de bem vindo do Laravel](image/interfaceLaravel.png)
 
 </details>
+<hr>
 <br>
 
 ## DATA BASE 
@@ -61,6 +62,7 @@ php artisan serve
 | civil_status | solteira      |
 | postal_code  | 68000123      |
 | profession   | estudante     |
+| password     | kjhjkhjkhkj   |
 <hr>
  
 ## Migrations
@@ -337,12 +339,87 @@ Agora que os dados estão chegando na Controller, podemos criar um layout para a
 <hr>
 <br>
 
-# CRUD
+## CRUD
 <details>
     <summary>
         O CRUD deve conter os métodos de Insert, Update, Delete e Read dessa tabela
     </summary>
+
+## Insert
+
+**Para começar:**
+
+Criar rota (web.php):
+
+```php
+Route::get('/users/insert',[UserController::class,'insert'])->name('users.insert);
+```
+Criar função para mostrar a pagina de inserir usuario (UserController.php):
+
+```php
+public function insert()
+{
+    return view('users.insert');
+}
+```
+
+Criar view (/views/users):
+
+```
+insert.blade.php
+```
+[Ver layout...](#front-end)
+
+Depois de criar o formulario, quando o botão de enviar for clicado os dados serão armazenados no banco de dados.
+
+Função simples de teste:
+
+```php
+
+    public function store(Request $request)
+    {
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->rg = $request->rg;
+        $user->age = $request->age;
+        $user->cpf = $request->cpf;
+        $user->phone = $request->phone;
+        $user->profession = $request->profession;
+        $user->postal_code = $request->postal_code;
+        $user->status_civil = $request->status_civil;
+        $user->sex = $request->sex;
+        $user->password = $request->cpf;
+        $user->save();
+    }
+    
+```
+
+## ERROR
+
+Nessa sessão me deparei com o sequinte problema, na criação do projeto usei a migrate padrão do Laravel e inseri novas colunas, até o momento de criar o formulário para inserir novo usuário usando o código simples ele funcionava, depois que usei a segunda forma de função me retorna um problema com o _token só que não consegui descifrar o problema.
+
+**Função 2:**
+
+```php
+    public function store(Request $request)
+    {
+        $data = $request->all();
+        $data['password'] = bcrypt($request->cpf);
+
+        $this->model->insert($data);
+
+        return redirect()->route('users.index');
+    }
+```
+**_TOKEN**
+
+![error](/image/error01.png)
+
+## COMO PRECISO CONCLUIR O CRUD CRIEI OUTRO PROJETO
+
 </details>
+<hr>
 <br>
 
 ## FRONT END
@@ -488,6 +565,71 @@ Agora como fica nas outras views.
 
 ![Imagem importando a o template criado](/image/import_template.png)
 
+## Layout Cadastro Usuário
+
+Para facilitar a inserssão de dados, criei uma view para salvar os dados no banco.
+
+```Html
+<div class="container py-5">
+    
+    <form action="{{ route('users.store') }}" method="POST" class="mt-5"> 
+      @csrf
+          <div class="form-row">
+            <div class="form-group col-md-5">
+              <label for="name">Nome</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Pedro" >
+            </div>
+            <div class="form-group col-md-1">
+              <label for="age">Idade</label>
+              <input type="text" class="form-control" id="age" name="age" placeholder="21">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="cpf">CPF</label>
+              <input type="text" class="form-control" id="cpf" name="cpf" placeholder="123.123.123-12">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="rg">RG</label>
+              <input type="text" class="form-control" id="rg" name="rg" placeholder="1111001">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="phone">Telefone</label>
+              <input type="tel" class="form-control" id="phone" name="phone" placeholder="99 99999-9999">
+            </div>
+            <div class="form-group col-md-6">
+              <label for="email">E-mail</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="exemp@gmail.com">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-2">
+              <label for="status_civil">Estado Civíl</label>
+              <input type="text" class="form-control" id="status_civil" name="status_civil" placeholder="União estável">
+            </div>
+            <div class="form-group col-md-2">
+              <label for="sex">SEX</label>
+              <input type="text" class="form-control" id="sex" name="sex" placeholder="SEXO">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="profession">Profissão</label>
+              <input type="text" class="form-control" id="profession" name="profession" placeholder="Freelancer">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="postal_code">CEP</label>
+              <input type="text" class="form-control" id="postal_code" name="postal_code" placeholder="00011100">
+            </div>
+          </div>       
+          <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+```
+![Layout insert usuário](/image/formulario_insert.png)
+
+
+
+
+
 
 </details>
 <hr>
@@ -499,6 +641,7 @@ Agora como fica nas outras views.
         A solução deve ter pelo menos 30% de testes unitários 
     </summary>
 </details>
+<hr>
 <br>
 
 ## Um quadro de empregos
