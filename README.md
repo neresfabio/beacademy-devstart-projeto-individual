@@ -426,6 +426,30 @@ Nessa sessão me deparei com o sequinte problema, na criação do projeto usei a
 <hr>
 <br>
 
+## UPDATE
+
+```php
+public function update(Request $request, $id)
+    {        
+        $affected = DB::table('users')
+              ->where('id', $id)
+              ->update(
+                [
+                    'name' => $request->name,
+                    'email'=> $request->email,
+                    'identity_card'=> $request->identity_card,
+                    'age'=> $request->age,
+                    'social_security'=> $request->social_security,
+                    'phone'=> $request->phone,
+                    'profession'=> $request->profession,
+                    'postal_code'=> $request->postal_code,
+                    'gender'=> $request->gender,
+                    'marital_status'=> $request->marital_status,
+                ]);
+        dd('Deu certo?');
+    }
+```
+
 ## FRONT END
 <details>
     <summary>
