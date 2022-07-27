@@ -4,6 +4,19 @@ Criar um CRUD em PHP, utilizando Laravel
 
 <details>
 	<summary>Utilizar o banco de dados Mysql para criar uma tabela - de sua preferência, com 10 atributos</summary>
+
+## Tabela para registrar os dados de usuários de um formulário.
+
+<hr>
+
+|  nome   |  cpf            |      rg   |  contato      |      email     | 
+|---------|-----------------|-----------|---------------|----------------|
+|  Juma   |  101.123.032.00 |  2103002  | 93 00000-0000 | juma@gmail.com |
+
+|     cep   |  logradouro  |  bairro  |  localidade |  uf  |
+|-----------|--------------|----------|-------------|------|
+|  1001-000 | Praça da Sé  |    Sé    |  São Paulo  |  SP  |
+
 </details>
 
 <details>
